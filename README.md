@@ -1,5 +1,5 @@
 # Manjaro ARM RockPro64
-[![iso_build](https://github.com/manjaro-arm/rockpro64-images/workflows/image_build/badge.svg)](https://github.com/manjaro-arm/rockpro64-images/actions)
+[![iso_build](https://github.com/manjaro-arm/rockpro64-images/workflows/image_build_all/badge.svg)](https://github.com/manjaro-arm/rockpro64-images/actions)
 
 ## description
 
