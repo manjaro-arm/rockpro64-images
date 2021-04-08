@@ -27,8 +27,6 @@ jobs:
           release_name: RockPro64 Dev ${{ steps.time.outputs.time }}
           draft: false
           prerelease: true
-      -
-        run: echo "TAG=${{ steps.time.outputs.time }}" >> $GITHUB_ENV
     outputs:
       upload_url: ${{ steps.release.outputs.upload_url }}
       release_id: ${{ steps.release.outputs.id }}
@@ -573,6 +571,7 @@ jobs:
           EDITION: ${{ matrix.EDITION }}
           BRANCH: ${{ matrix.BRANCH }}
           VERSION: ${{ steps.time.outputs.time }}
+          TAG: ${{ jobs.prepare_release.steps.time.outputs.time }}
         run: |
           sudo mv -v /home/runner/work/rockpro64-images/rockpro64-images/arm-profiles /usr/share/manjaro-arm-tools/profiles
           sudo buildarmimg -d rockpro64 -e $EDITION -v $VERSION -b $BRANCH
