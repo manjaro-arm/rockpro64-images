@@ -52,7 +52,7 @@ jobs:
         name: install-arm-tools
         run: |
           sudo apt-get update
-          sudo apt install gdisk zip systemd-container bmap-tools asciidoc libarchive-tools git build-essential cmake libarchive-dev pkg-config libcurl4-openssl-dev libgpgme-dev libssl-dev fakeroot dh-autoreconf qemu-utils qemu-efi-aarch64 qemu-system-arm qemu-user-static
+          sudo apt install gdisk zip systemd-container bmap-tools asciidoc libarchive-tools git build-essential cmake libarchive-dev pkg-config libcurl4-openssl-dev libgpgme-dev libssl-dev fakeroot dh-autoreconf qemu-utils qemu-efi-aarch64 qemu-system-arm qemu-user-static mktorrent
           
           sudo git clone https://gitlab.manjaro.org/packages/core/pacman.git
           cd pacman
@@ -120,6 +120,7 @@ jobs:
           EDITION: ${{ matrix.EDITION }}
           BRANCH: ${{ matrix.BRANCH }}
           VERSION: ${{ steps.time.outputs.time }}
+          TAG: ${{ steps.prerelease.outputs.id }}
         run: |
           sudo mv -v /home/runner/work/rockpro64-images/rockpro64-images/arm-profiles /usr/share/manjaro-arm-tools/profiles
           sudo buildarmimg -d rockpro64 -e $EDITION -v $VERSION -b $BRANCH
@@ -130,9 +131,11 @@ jobs:
           cp -v $FILE_PATH .
           
           sha1sum $FILE_PATH > $(basename $FILE_PATH).sha1
+          mktorrent -v -a udp://tracker.opentrackr.org:1337 -w https://github.com/manjaro-arm/rockpro64-images/releases/download/$TAG/$FILEPATH -o $(basename $FILEPATH).torrent $FILEPATH
 
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
           echo "FILE_SHA1=$(basename $FILE_PATH).sha1" >> $GITHUB_ENV
+          echo "FILE_TORRENT=$(basename $FILE_PATH).torrent" >> $GITHUB_ENV
           
           FILE_PKG=$(find /var/cache/manjaro-arm-tools/img -type f -name "*-pkgs.txt" -exec stat -c '%Y %n' {} \; | sort -nr | awk 'NR==1 {print $2}')
           cp -v $FILE_PKG .
@@ -157,6 +160,16 @@ jobs:
           upload_url: ${{ needs.prepare_release.outputs.upload_url }}
           asset_path: ./${{ env.FILE_SHA1 }}
           asset_name: ${{ env.FILE_SHA1 }}
+          asset_content_type: text/plain
+      - 
+        id: upload_torrent
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.prepare_release.outputs.upload_url }}
+          asset_path: ./${{ env.FILE_TORRENT }}
+          asset_name: ${{ env.FILE_TORRENT }}
           asset_content_type: text/plain
       - 
         id: upload_pkg
@@ -198,7 +211,7 @@ jobs:
         name: install-arm-tools
         run: |
           sudo apt-get update
-          sudo apt install gdisk zip systemd-container bmap-tools asciidoc libarchive-tools git build-essential cmake libarchive-dev pkg-config libcurl4-openssl-dev libgpgme-dev libssl-dev fakeroot dh-autoreconf qemu-utils qemu-efi-aarch64 qemu-system-arm qemu-user-static
+          sudo apt install gdisk zip systemd-container bmap-tools asciidoc libarchive-tools git build-essential cmake libarchive-dev pkg-config libcurl4-openssl-dev libgpgme-dev libssl-dev fakeroot dh-autoreconf qemu-utils qemu-efi-aarch64 qemu-system-arm qemu-user-static mktorrent
           
           sudo git clone https://gitlab.manjaro.org/packages/core/pacman.git
           cd pacman
@@ -344,7 +357,7 @@ jobs:
         name: install-arm-tools
         run: |
           sudo apt-get update
-          sudo apt install gdisk zip systemd-container bmap-tools asciidoc libarchive-tools git build-essential cmake libarchive-dev pkg-config libcurl4-openssl-dev libgpgme-dev libssl-dev fakeroot dh-autoreconf qemu-utils qemu-efi-aarch64 qemu-system-arm qemu-user-static
+          sudo apt install gdisk zip systemd-container bmap-tools asciidoc libarchive-tools git build-essential cmake libarchive-dev pkg-config libcurl4-openssl-dev libgpgme-dev libssl-dev fakeroot dh-autoreconf qemu-utils qemu-efi-aarch64 qemu-system-arm qemu-user-static mktorrent
           
           sudo git clone https://gitlab.manjaro.org/packages/core/pacman.git
           cd pacman
@@ -490,7 +503,7 @@ jobs:
         name: install-arm-tools
         run: |
           sudo apt-get update
-          sudo apt install gdisk zip systemd-container bmap-tools asciidoc libarchive-tools git build-essential cmake libarchive-dev pkg-config libcurl4-openssl-dev libgpgme-dev libssl-dev fakeroot dh-autoreconf qemu-utils qemu-efi-aarch64 qemu-system-arm qemu-user-static
+          sudo apt install gdisk zip systemd-container bmap-tools asciidoc libarchive-tools git build-essential cmake libarchive-dev pkg-config libcurl4-openssl-dev libgpgme-dev libssl-dev fakeroot dh-autoreconf qemu-utils qemu-efi-aarch64 qemu-system-arm qemu-user-static mktorrent
           
           sudo git clone https://gitlab.manjaro.org/packages/core/pacman.git
           cd pacman
