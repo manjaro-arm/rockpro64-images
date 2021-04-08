@@ -499,11 +499,11 @@ jobs:
         uses: nanzm/get-time-action@v1.1
         with:
           format: 'YYYYMMDD'
-      - 
-        id: timefull
-        uses: nanzm/get-time-action@v1.1
-        with:
-          format: 'YYYYMMDDHHmm'
+      #- 
+      #  id: timefull
+      #  uses: nanzm/get-time-action@v1.1
+      #  with:
+      #    format: 'YYYYMMDDHHmm'
       -
         name: install-arm-tools
         run: |
@@ -576,7 +576,7 @@ jobs:
           EDITION: ${{ matrix.EDITION }}
           BRANCH: ${{ matrix.BRANCH }}
           VERSION: ${{ steps.time.outputs.time }}
-          TAG: ${{ steps.timefull.outputs.timefull }}
+          #TAG: ${{ steps.timefull.outputs.timefull }}
         run: |
           sudo mv -v /home/runner/work/rockpro64-images/rockpro64-images/arm-profiles /usr/share/manjaro-arm-tools/profiles
           sudo buildarmimg -d rockpro64 -e $EDITION -v $VERSION -b $BRANCH
@@ -588,7 +588,7 @@ jobs:
           
           sha1sum $FILE_PATH > $(basename $FILE_PATH).sha1
           #mktorrent -v -a udp://tracker.opentrackr.org:1337 -w https://github.com/manjaro-arm/rockpro64-images/releases/download/$TAG/$(basename $FILE_PATH) -o $(basename $FILE_PATH).torrent $(basename $FILE_PATH)
-          mktorrent -v -a udp://tracker.opentrackr.org:1337 -w ${{ needs.prepare_release.outputs.upload_url }}/$(basename $FILE_PATH) -o $(basename $FILE_PATH).torrent $(basename $FILE_PATH)
+          mktorrent -v -a udp://tracker.opentrackr.org:1337 -w "${{ needs.prepare_release.outputs.upload_url }}/$(basename $FILE_PATH)" -o $(basename $FILE_PATH).torrent $(basename $FILE_PATH)
 
           echo "FILE_PATH=$(basename $FILE_PATH)" >> $GITHUB_ENV
           echo "FILE_SHA1=$(basename $FILE_PATH).sha1" >> $GITHUB_ENV
