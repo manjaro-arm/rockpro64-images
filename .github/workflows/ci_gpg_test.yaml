@@ -1,0 +1,70 @@
+name: ci_gpg_test
+on:
+  workflow_dispatch:
+#  schedule:
+#    - cron:  '30 6 1 * *'
+
+jobs:
+  release:
+    runs-on: ubuntu-20.04  
+    strategy:
+      matrix:
+        ##### EDIT ME #####  
+        EDITION: [xfce]
+        BRANCH: [stable]
+        SCOPE: [minimal]
+        ###################
+    steps:
+      -
+        name: Build ISO
+        env:
+          EDITION: ${{ matrix.EDITION }}
+          BRANCH: ${{ matrix.BRANCH }}
+          SCOPE: ${{ matrix.SCOPE }}
+          ##### EDIT ME #####
+          KERNEL: "linux510"
+          CODE_NAME: "Ornara"
+          VERSION: "test_upload"
+          ###################
+        run: |                
+          [ "$SCOPE" == "minimal" ] && unset SCOPE
+          
+          echo "file1" > file1
+          echo "file2" > file2
+          echo "file3" > file3
+                 
+          sudo apt-get install paperkey gpg
+          
+          echo "setup values"
+          GPG_HOMEDIR="$(mktemp -d -t gnupg.XXX)"
+          SECRET_KEY_FILE="$GPG_HOMEDIR/secret.key"
+          PUBLIC_KEY_FILE="$GPG_HOMEDIR/public_key.gpg"
+          PASSPHRASE_FILE="$GPG_HOMEDIR/passphrase.file"
+          GPG="gpg --homedir=$GPG_HOMEDIR --no-tty --batch --yes"
+          
+          echo "unpack public key"
+          echo "${{ secrets.CI_PUB_KEY }}" | base64 --decode > "$PUBLIC_KEY_FILE"
+
+          echo "unpack secret key"
+          echo "${{ secrets.CI_GPG_SECRET }}" | base64 --decode > "$SECRET_KEY_FILE"
+          
+          echo "passphrase"
+          echo "${{ secrets.CI_GPG_PASSPHRASE }}" > "$PASSPHRASE_FILE"
+          
+          echo "Secrets unpacked..."
+
+          paperkey --pubring "$PUBLIC_KEY_FILE" --secrets "$SECRET_KEY_FILE" \
+          | $GPG --import &>/dev/null
+
+          $GPG --pinentry-mode loopback --detach-sign --use-agent -u "${{ secrets.CI_GPG_KEY }}" --passphrase-file "$PASSPHRASE_FILE" file1
+
+          ls -lasih
+          
+          echo "Verifying file"
+          $GPG --verify file1.sig file1
+          
+          echo "cleaning up"
+          find "$GPG_HOMEDIR" -type f -exec shred {} \;
+          rm -rf "$GPG_HOMEDIR"
+          echo "script done"
+ 
