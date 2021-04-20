@@ -36,6 +36,7 @@ jobs:
     needs: prepare_release
     strategy:
       matrix:
+        DEVICE: [rockpro64]
         EDITION: [kde-plasma,mate,minimal,xfce]
         BRANCH: [unstable]
     steps:
@@ -117,12 +118,13 @@ jobs:
       -
         name: build
         env:
+          DEVICE: ${{ matrix.DEVICE }}
           EDITION: ${{ matrix.EDITION }}
           BRANCH: ${{ matrix.BRANCH }}
           VERSION: ${{ steps.time.outputs.time }}
         run: |
-          sudo mv -v /home/runner/work/rockpro64-images/rockpro64-images/arm-profiles /usr/share/manjaro-arm-tools/profiles
-          sudo buildarmimg -d rockpro64 -e $EDITION -v $VERSION -b $BRANCH
+          sudo mv -v $GITHUB_WORKSPACE/arm-profiles /usr/share/manjaro-arm-tools/profiles
+          sudo buildarmimg -d $DEVICE -e $EDITION -v $VERSION -b $BRANCH
           
           ls -lasih /var/cache/manjaro-arm-tools/img
           
