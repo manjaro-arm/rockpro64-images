@@ -130,7 +130,7 @@ jobs:
           cp -v $FILE_PATH .
           
           sha1sum $FILE_PATH > $(basename $FILE_PATH).sha1
-          mktorrent -v -a udp://tracker.opentrackr.org:1337 -w https://github.com/manjaro-arm/rockpro64-images/releases/download/$VERSION/$(basename $FILE_PATH) -o $(basename $FILE_PATH).torrent $(basename $FILE_PATH)
+          mktorrent -v -a udp://tracker.opentrackr.org:1337 -w https://github.com/$GITHUB_REPOSITORY/releases/download/$VERSION/$(basename $FILE_PATH) -o $(basename $FILE_PATH).torrent $(basename $FILE_PATH)
           
           # Do GPG signing
           echo "setup values"
