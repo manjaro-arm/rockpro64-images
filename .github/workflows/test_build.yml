@@ -51,7 +51,7 @@ jobs:
           format: 'YYYYMMDD'
       -
         id: image-build
-        uses: manjaro/rootfs@master
+        uses: manjaro-arm/rootfs@master
         with:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
