@@ -57,7 +57,7 @@ jobs:
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           version: ${{ steps.time.outputs.time }}
-          gpg-key: ${{ secrets.CI_GPG_KEY }}
+          gpg-key: ${{ secrets.CI_GPG_SECRET }}
           gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}
       - 
         id: upload_release 
