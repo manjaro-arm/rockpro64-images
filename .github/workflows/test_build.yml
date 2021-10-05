@@ -51,15 +51,14 @@ jobs:
           format: 'YYYYMMDD'
       -
         id: image-build
-        uses: manjaro-arm/rootfs@gpg
+        uses: manjaro-arm/rootfs@master
         with:
           device: ${{ matrix.device }}
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           version: ${{ steps.time.outputs.time }}
-          CI_PUB_KEY: ${{ secrets.CI_PUB_KEY }}
-          CI_GPG_SECRET: ${{ secrets.CI_GPG_SECRET }}
-          CI_GPG_PASSPHRASE: ${{ secrets.CI_GPG_PASSPHRASE }}
+          gpg-key: ${{ secrets.CI_GPG_KEY }}
+          gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}
       - 
         id: upload_release 
         uses: actions/upload-release-asset@v1.0.2
