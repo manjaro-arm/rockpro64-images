@@ -51,14 +51,14 @@ jobs:
           format: 'YYYYMMDD'
       -
         id: image-build
-        uses: manjaro-arm/rootfs@gpg
+        uses: manjaro-arm/rootfs@environment-files
         with:
           device: ${{ matrix.device }}
           edition: ${{ matrix.edition }}
           branch: ${{ matrix.branch }}
           version: ${{ steps.time.outputs.time }}
-          gpg-key: ${{ secrets.CI_GPG_SECRET }}
-          gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}
+          #gpg-key: ${{ secrets.CI_GPG_SECRET }}
+          #gpg-passphrase: ${{ secrets.CI_GPG_PASSPHRASE }}
       - 
         id: upload_release 
         uses: actions/upload-release-asset@v1.0.2
@@ -89,16 +89,16 @@ jobs:
           asset_path: ./${{ env.FILE_TORRENT }}
           asset_name: ${{ env.FILE_TORRENT }}
           asset_content_type: application/x-bittorrent
-      - 
-        id: upload_sig
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ needs.prepare_release.outputs.upload_url }}
-          asset_path: ./${{ env.FILE_SIG }}
-          asset_name: ${{ env.FILE_SIG }}
-          asset_content_type: text/plain
+      #-
+      #  id: upload_sig
+      #  uses: actions/upload-release-asset@v1.0.2
+      #  env:
+      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #  with:
+      #    upload_url: ${{ needs.prepare_release.outputs.upload_url }}
+      #    asset_path: ./${{ env.FILE_SIG }}
+      #    asset_name: ${{ env.FILE_SIG }}
+      #    asset_content_type: text/plain
       - 
         id: upload_pkg
         uses: actions/upload-release-asset@v1.0.2
