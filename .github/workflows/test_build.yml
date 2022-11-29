@@ -51,7 +51,7 @@ jobs:
           format: 'YYYYMMDD'
       -
         id: image-build
-        uses: manjaro-arm/rootfs@gpg
+        uses: manjaro-arm/rootfs@master
         with:
           device: ${{ matrix.device }}
           edition: ${{ matrix.edition }}
