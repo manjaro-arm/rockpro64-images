@@ -7,32 +7,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prepare_release:
-    runs-on: ubuntu-latest
-    steps:
-      -
-        id: time
-        uses: boredland/get-time-action@2.0.0
-        with:
-          format: 'YY.MM'
-    outputs:
-      upload_url: ${{ steps.release.outputs.upload_url }}
-      release_id: ${{ steps.release.outputs.id }}
-
   release:
     runs-on: ubuntu-22.04
-    needs: prepare_release
     strategy:
       matrix:
         DEVICE: [rockpro64]
         EDITION: [gnome,kde-plasma,mate,minimal,sway,xfce]
         BRANCH: [stable]
     steps:
-      - 
+      -
         id: time
         uses: boredland/get-time-action@2.0.0
         with:
-          format: 'YY.MM'
+          format: 'YYYYMMDD'
       -
         id: image-build
         uses: manjaro-arm/rootfs@master
@@ -59,11 +46,3 @@ jobs:
             ${{ env.FILE_TORRENT }}
             ${{ env.FILE_PKG }}
             #${{ env.FILE_SIG }}
-      -
-        name: rollback_release
-        if: failure()
-        uses: author/action-rollback@stable
-        with:
-          release_id: ${{ needs.prepare_release.outputs.release_id }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
