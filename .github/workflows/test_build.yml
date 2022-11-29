@@ -4,14 +4,14 @@ on:
 #  schedule:
 #    - cron:  '30 2 * * 1'
 
+concurrency:
+  group: ${{ github.repository }}-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   prepare_release:
     runs-on: ubuntu-latest
     steps:
-      - 
-        uses: styfle/cancel-workflow-action@0.11.0
-        with:
-          access_token: ${{ github.token }}
       - 
         id: time
         uses: boredland/get-time-action@2.0.0
@@ -40,10 +40,6 @@ jobs:
         EDITION: [minimal]
         BRANCH: [unstable]
     steps:
-      - 
-        uses: styfle/cancel-workflow-action@0.11.0
-        with:
-          access_token: ${{ github.token }}
       - 
         id: time
         uses: boredland/get-time-action@2.0.0
