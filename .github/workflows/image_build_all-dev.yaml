@@ -9,21 +9,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prepare_release:
-    runs-on: ubuntu-latest
-    steps:
-      -
-        id: time
-        uses: boredland/get-time-action@2.0.0
-        with:
-          format: 'YYYYMMDD'
-    outputs:
-      upload_url: ${{ steps.release.outputs.upload_url }}
-      release_id: ${{ steps.release.outputs.id }}
-
   release:
     runs-on: ubuntu-22.04
-    needs: prepare_release
     strategy:
       matrix:
         DEVICE: [rockpro64]
