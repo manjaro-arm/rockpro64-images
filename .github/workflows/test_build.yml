@@ -14,7 +14,7 @@ jobs:
           access_token: ${{ github.token }}
       - 
         id: time
-        uses: nanzm/get-time-action@v1.1
+        uses: boredland/get-time-action@2.0.0
         with:
           format: 'YYYYMMDD'
       - 
@@ -51,7 +51,7 @@ jobs:
           format: 'YYYYMMDD'
       -
         id: image-build
-        uses: manjaro-arm/rootfs@environment-files
+        uses: manjaro-arm/rootfs@gpg
         with:
           device: ${{ matrix.device }}
           edition: ${{ matrix.edition }}
